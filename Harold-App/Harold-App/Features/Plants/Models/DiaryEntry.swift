@@ -10,21 +10,17 @@ import SwiftData
 
 @Model
 final class DiaryEntry {
-    var id: String
     var note: String
     var healthScore: Double
     var timestamp: Date
+    var plant: Plant?
+    var imageData: Data? // New property for diary entry image
     
-    @Relationship var plant: Plant?
-    
-    init(id: String = UUID().uuidString,
-         note: String,
-         healthScore: Double,
-         plant: Plant? = nil) {
-        self.id = id
+    init(note: String, healthScore: Double, plant: Plant? = nil, imageData: Data? = nil) {
         self.note = note
         self.healthScore = healthScore
         self.timestamp = Date()
         self.plant = plant
+        self.imageData = imageData
     }
 }
