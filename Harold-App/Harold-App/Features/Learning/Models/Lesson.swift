@@ -15,17 +15,16 @@ final class Lesson {
     var desc: String
     var content: [LessonContent]
     var isCompleted: Bool
+    var isUnlocked: Bool
     var completedAt: Date?
-    var deviceId: String
     
     enum LessonContent: Codable {
         case text(String)
-        case image(String)
-        case video(URL)
-        case quiz([QuizQuestion])
+        case quiz([QuizQuestion]) // Removed .image case
     }
     
-    struct QuizQuestion: Codable {
+    struct QuizQuestion: Codable, Identifiable {
+        let id = UUID()
         let question: String
         let options: [String]
         let correctAnswer: Int
@@ -35,12 +34,13 @@ final class Lesson {
          title: String,
          desc: String,
          content: [LessonContent],
-         deviceId: String = DeviceManager.shared.deviceId) {
+         isCompleted: Bool = false,
+         isUnlocked: Bool = false) {
         self.id = id
         self.title = title
         self.desc = desc
         self.content = content
-        self.isCompleted = false
-        self.deviceId = deviceId
+        self.isCompleted = isCompleted
+        self.isUnlocked = isUnlocked
     }
 }

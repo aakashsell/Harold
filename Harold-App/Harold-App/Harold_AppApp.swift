@@ -19,7 +19,8 @@ struct HaroldApp: App {
                 Plant.self,
                 CareEvent.self,
                 DiaryEntry.self,
-                Lesson.self
+                Lesson.self,
+                Course.self,
             ])
             let modelConfiguration = ModelConfiguration(
                 schema: schema,

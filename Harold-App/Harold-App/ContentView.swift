@@ -17,22 +17,38 @@ struct ContentView: View {
     }
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            PlantListView()
-                .tabItem {
-                    Label("Plants", systemImage: "leaf.fill")
-                }
-                .tag(Tab.plants)
-            ChatView()
-                .tabItem {
-                    Label("Chat", systemImage: "sparkles")
-                }
-                .tag(Tab.chat)
-            LearningView()
-                .tabItem {
-                    Label("Learn", systemImage: "book.fill")
-                }
-                .tag(Tab.learning)
+        ZStack(alignment: .bottom) {
+            // Background content
+            TabView(selection: $selectedTab) {
+                PlantListView()
+                    .tabItem {
+                        Label("Plants", systemImage: "leaf.fill")
+                    }
+                    .tag(Tab.plants)
+                ChatView()
+                    .tabItem {
+                        Label("Chat", systemImage: "sparkles")
+                    }
+                    .tag(Tab.chat)
+                LearningView(modelContext: modelContext)
+                    .tabItem {
+                        Label("Learn", systemImage: "book.fill")
+                    }
+                    .tag(Tab.learning)
+            }
+            .accentColor(activeTabColor())
+        }
+    }
+    
+    // Function to determine the active tab color
+    private func activeTabColor() -> Color {
+        switch selectedTab {
+        case .plants:
+            return .green
+        case .learning:
+            return .brown
+        case .chat:
+            return .purple
         }
     }
 }

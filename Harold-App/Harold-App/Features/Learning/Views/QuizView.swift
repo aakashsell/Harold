@@ -9,102 +9,53 @@ import SwiftUI
 
 struct QuizView: View {
     let questions: [Lesson.QuizQuestion]
-    @State private var selectedAnswers: [Int] = []
-    @State private var showingResults = false
-    
-    private var score: Int {
-        var correct = 0
-        for (index, question) in questions.enumerated() {
-            if index < selectedAnswers.count && selectedAnswers[index] == question.correctAnswer {
-                correct += 1
-            }
-        }
-        return correct
-    }
+    @Binding var selectedAnswers: [Int?]
+    @Binding var showingResults: Bool
+    @State private var score: Double = 0.0
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            ForEach(questions.indices, id: \.self) { questionIndex in
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Question \(questionIndex + 1)")
-                        .font(.headline)
-                        .foregroundColor(.secondary)
-                    
-                    Text(questions[questionIndex].question)
-                        .font(.title3)
-                    
-                    VStack(spacing: 8) {
-                        ForEach(questions[questionIndex].options.indices, id: \.self) { optionIndex in
-                            Button {
-                                selectAnswer(questionIndex: questionIndex, answer: optionIndex)
-                            } label: {
-                                HStack {
-                                    Text(questions[questionIndex].options[optionIndex])
-                                    Spacer()
-                                    if showingResults {
-                                        if optionIndex == questions[questionIndex].correctAnswer {
-                                            Image(systemName: "checkmark.circle.fill")
-                                                .foregroundColor(.green)
-                                        } else if selectedAnswers.indices.contains(questionIndex) && selectedAnswers[questionIndex] == optionIndex {
-                                            Image(systemName: "x.circle.fill")
-                                                .foregroundColor(.red)
-                                        }
-                                    } else if selectedAnswers.indices.contains(questionIndex) && selectedAnswers[questionIndex] == optionIndex {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundColor(.blue)
-                                    }
-                                }
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.secondary.opacity(0.1))
-                                )
-                            }
-                            .buttonStyle(.plain)
-                            .disabled(showingResults)
-                        }
-                    }
-                }
-                
-                if questionIndex < questions.count - 1 {
-                    Divider()
-                }
+        VStack(alignment: .leading, spacing: 15) {
+            Text("Quiz")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            ForEach(questions.indices, id: \.self) { index in
+                QuizQuestionView(
+                    question: questions[index],
+                    selectedAnswer: Binding(
+                        get: { selectedAnswers[index] },
+                        set: { selectedAnswers[index] = $0 }
+                    ),
+                    showingResults: $showingResults
+                )
             }
             
-            if selectedAnswers.count == questions.count && !showingResults {
-                Button {
-                    showingResults = true
-                } label: {
-                    Text("Check Answers")
-                        .frame(maxWidth: .infinity)
+            if !showingResults {
+                Button("Submit Quiz") {
+                    calculateScore()
                 }
                 .buttonStyle(.borderedProminent)
-                .padding(.top)
-            }
-            
-            if showingResults {
-                VStack(spacing: 8) {
-                    Text("Quiz Results")
+                .disabled(selectedAnswers.contains(where: { $0 == nil }))
+            } else {
+                VStack(alignment: .leading) {
+                    Text("Score: \(Int(score * 100))%")
                         .font(.headline)
-                    Text("\(score) out of \(questions.count) correct")
-                        .foregroundColor(score == questions.count ? .green : .orange)
+                        .foregroundColor(score > 0.7 ? .green : .red)
                 }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.secondary.opacity(0.1))
-                .cornerRadius(10)
             }
         }
-        .padding()
-        .background(Color.secondary.opacity(0.05))
-        .cornerRadius(16)
     }
     
-    private func selectAnswer(questionIndex: Int, answer: Int) {
-        if selectedAnswers.count <= questionIndex {
-            selectedAnswers.append(answer)
-        } else {
-            selectedAnswers[questionIndex] = answer
+    private func calculateScore() {
+        var correctCount = 0
+        
+        for (index, question) in questions.enumerated() {
+            if selectedAnswers[index] == question.correctAnswer {
+                correctCount += 1
+            }
         }
+        
+        score = Double(correctCount) / Double(questions.count)
+        showingResults = true
     }
 }

@@ -4,7 +4,6 @@
 //
 //  Created by Juan Pablo Urista on 2/7/25.
 //
-
 import Foundation
 import SwiftData
 
@@ -15,17 +14,25 @@ final class Course {
     var desc: String
     var lessons: [Lesson]
     var progress: Double
-    var deviceId: String
+    var isUnlocked: Bool
+    var isCompleted: Bool
+    var courseOrder: Int // Add this property to define the order of courses
     
     init(id: String = UUID().uuidString,
          title: String,
          desc: String,
-         deviceId: String = DeviceManager.shared.deviceId) {
+         lessons: [Lesson] = [],
+         progress: Double = 0.0,
+         isUnlocked: Bool = false,
+         isCompleted: Bool = false,
+         courseOrder: Int = 0) { // Add courseOrder to the initializer
         self.id = id
         self.title = title
         self.desc = desc
-        self.lessons = []
-        self.progress = 0.0
-        self.deviceId = deviceId
+        self.lessons = lessons
+        self.progress = progress
+        self.isUnlocked = isUnlocked
+        self.isCompleted = isCompleted
+        self.courseOrder = courseOrder
     }
 }

@@ -7,22 +7,32 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct ProgressIndicator: View {
     let progress: Double
     let color: Color
+    
+    init(progress: Double, color: Color = .blue) {
+        self.progress = max(0, min(1, progress))
+        self.color = color
+    }
     
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 Rectangle()
-                    .fill(Color.gray.opacity(0.3))
+                    .fill(color.opacity(0.2))
+                    .frame(width: geometry.size.width, height: 10)
+                    .cornerRadius(5)
                 
                 Rectangle()
                     .fill(color)
-                    .frame(width: min(CGFloat(self.progress) * geometry.size.width, geometry.size.width))
+                    .frame(width: geometry.size.width * progress, height: 10)
+                    .cornerRadius(5)
+                    .animation(.easeInOut, value: progress)
             }
         }
-        .frame(height: 8)
-        .clipShape(Capsule())
+        .frame(height: 10)
     }
 }
