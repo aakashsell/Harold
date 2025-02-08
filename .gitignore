@@ -108,3 +108,5 @@ Temporary Items
 .env.test.local
 .env.production.local
 Dockerfile
+
+build.sh

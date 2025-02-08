@@ -71,10 +71,78 @@ struct ChatView: View {
         }
     }
     
+    struct AIResponse: Decodable {
+        let prompt: String  // Define a struct that matches your JSON structure
+        let response: String  // The key "response" must match the JSON
+        // Add other properties here for other JSON fields if needed
+    }
+    
     private func performAIQuery(message: String) async throws -> String {
-        // TODO: Implement actual API call to AI service
-        // This is a placeholder that simulates an AI response
-        try await Task.sleep(nanoseconds: 1_000_000_000) // Simulate network delay
-        return "This is a sample AI response to: \(message)"
+        // Ensure the URL is valid
+        guard let url = URL(string: "https://harold.bazement.net/api/chat/") else {
+            throw URLError(.badURL) // Throw an error if the URL is invalid
+        }
+        
+        // Create the URLRequest
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Prepare the JSON body
+        let json: [String: Any] = ["prompt": message]
+        let jsonData = try JSONSerialization.data(withJSONObject: json)
+        request.httpBody = jsonData
+        
+        // Perform the request using async/awai
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Print the raw response data for debugging
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("Response Data: \(responseString)")
+            } else {
+                print("Unable to convert data to string. Try a different encoding.")
+                throw URLError(.badServerResponse)
+            }
+            
+            // Check the HTTP response status code
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                throw URLError(.badServerResponse)
+            }
+            
+            do {
+                // Step 1: Decode the response data into a String
+                let jsonString = try JSONDecoder().decode(String.self, from: data)
+                
+                // Step 2: Convert the JSON string back into Data
+                guard let jsonData = jsonString.data(using: .utf8) else {
+                    throw URLError(.cannotParseResponse)
+                }
+                
+                // Step 3: Decode the JSON data into your AIResponse model
+                let decoder = JSONDecoder()
+                let aiResponse = try decoder.decode(AIResponse.self, from: jsonData)
+                return aiResponse.response
+                
+            } catch let decodingError as DecodingError {
+                print("JSON decoding error: \(decodingError)")
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("Response Data: \(responseString)") // Print response for debugging
+                }
+                throw URLError(.cannotParseResponse)
+            } catch {
+                print("An unexpected error occurred during JSON processing: \(error)")
+                throw URLError(.cannotParseResponse)
+            }
+            
+        } catch let urlError as URLError {
+            print("URL Error: \(urlError)")
+            throw urlError
+        } catch {
+            print("An unexpected error occurred: \(error)")
+            throw error
+        }
+        
     }
 }
