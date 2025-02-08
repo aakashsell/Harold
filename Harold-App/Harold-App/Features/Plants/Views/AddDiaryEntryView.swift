@@ -4,11 +4,9 @@
 //
 //  Created by Luke Cusato on 2/8/25.
 //
-
-//import SwiftUI
-//
 //import SwiftUI
 //import SwiftData
+//import PhotosUI
 //
 //struct AddDiaryEntryView: View {
 //    @Environment(\.modelContext) private var modelContext
@@ -17,6 +15,8 @@
 //    let plant: Plant
 //    @State private var note: String = ""
 //    @State private var healthScore: Double = 100
+//    @State private var selectedPhotoItem: PhotosPickerItem?
+//    @State private var imageData: Data?
 //    
 //    private var healthColor: Color {
 //        Color.healthColor(score: healthScore)
@@ -44,10 +44,26 @@
 //                                .foregroundColor(.green)
 //                        }
 //                        
-//                        // Health score descriptions
 //                        Text(healthDescription)
 //                            .font(.caption)
 //                            .foregroundColor(.secondary)
+//                    }
+//                }
+//                
+//                Section("Add Photo") {
+//                    PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
+//                        HStack {
+//                            Image(systemName: "photo")
+//                            Text("Select a Photo")
+//                        }
+//                    }
+//                    
+//                    if let imageData, let uiImage = UIImage(data: imageData) {
+//                        Image(uiImage: uiImage)
+//                            .resizable()
+//                            .aspectRatio(contentMode: .fill)
+//                            .frame(height: 200)
+//                            .clipShape(RoundedRectangle(cornerRadius: 8))
 //                    }
 //                }
 //                
@@ -81,6 +97,14 @@
 //                    }
 //                }
 //            }
+//            .onChange(of: selectedPhotoItem) {
+//                Task {
+//                    if let photoItem = selectedPhotoItem,
+//                       let data = try? await photoItem.loadTransferable(type: Data.self) {
+//                        imageData = data
+//                    }
+//                }
+//            }
 //        }
 //    }
 //    
@@ -108,11 +132,28 @@
 //        )
 //        modelContext.insert(entry)
 //        
+//        // Add photo if available
+//        if let imageData {
+//            let plantImage = PlantImage(
+//                id: UUID().uuidString,
+//                imageData: imageData,
+//                timestamp: Date()
+//            )
+//            plantImage.plant = plant
+//            plant.images.append(plantImage)
+//        }
+//        
 //        // Update plant's health score
 //        plant.healthScore = healthScore
 //        plant.updatedAt = Date()
 //        
-//        dismiss()
+//        // Save changes
+//        do {
+//            try modelContext.save()
+//            dismiss()
+//        } catch {
+//            print("Failed to save diary entry: \(error)")
+//        }
 //    }
 //}
 import SwiftUI
@@ -128,6 +169,7 @@ struct AddDiaryEntryView: View {
     @State private var healthScore: Double = 100
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var imageData: Data?
+    @State private var replaceMainImage: Bool = false
     
     private var healthColor: Color {
         Color.healthColor(score: healthScore)
@@ -176,6 +218,8 @@ struct AddDiaryEntryView: View {
                             .frame(height: 200)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
+                    
+                    Toggle("Set as Main Image", isOn: $replaceMainImage)
                 }
                 
                 Section("Notes") {
@@ -239,19 +283,14 @@ struct AddDiaryEntryView: View {
         let entry = DiaryEntry(
             note: note,
             healthScore: healthScore,
-            plant: plant
+            plant: plant,
+            imageData: imageData
         )
         modelContext.insert(entry)
         
-        // Add photo if available
-        if let imageData {
-            let plantImage = PlantImage(
-                id: UUID().uuidString,
-                imageData: imageData,
-                timestamp: Date()
-            )
-            plantImage.plant = plant
-            plant.images.append(plantImage)
+        // Update plant's main image if selected
+        if replaceMainImage, let imageData {
+            plant.mainImageData = imageData
         }
         
         // Update plant's health score
@@ -267,3 +306,4 @@ struct AddDiaryEntryView: View {
         }
     }
 }
+

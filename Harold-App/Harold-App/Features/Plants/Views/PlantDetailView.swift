@@ -1,55 +1,42 @@
-
+//
 //import SwiftUI
-//import PhotosUI
 //
 //struct PlantDetailView: View {
 //    let plant: Plant
 //    @Environment(\.modelContext) private var modelContext
-//    @State private var selectedPhotoItem: PhotosPickerItem?
 //    @State private var showingCareSheet = false
 //    @State private var showingDiaryEntry = false
 //    
 //    var body: some View {
 //        ScrollView {
 //            VStack(spacing: 20) {
-//                PhotoGalleryView(plant: plant, selectedPhotoItem: $selectedPhotoItem)
+//                // Photo Gallery
+//                PhotoGalleryView(plant: plant)
+//                
+//                // Health Status
 //                HealthStatusView(plant: plant)
+//                
+//                // Care History
 //                CareHistoryView(plant: plant, showingCareSheet: $showingCareSheet)
+//                
+//                // Plant Diary
 //                PlantDiaryView(plant: plant, showingDiaryEntry: $showingDiaryEntry)
 //            }
+//            .padding(.vertical)
 //        }
 //        .navigationTitle(plant.name)
-//        .onChange(of: selectedPhotoItem) {
-//            Task {
-//                await addPhoto()
-//            }
-//        }
 //        .sheet(isPresented: $showingCareSheet) {
-//            AddCareEventView(plant: plant)              // Error msg: "Argument passed to call that takes no arguments"
+//            AddCareEventView(plant: plant)
 //        }
 //        .sheet(isPresented: $showingDiaryEntry) {
-//            AddDiaryEntryView(plant: plant)             // Error msg: "Argument passed to call that takes no arguments"
+//            AddDiaryEntryView(plant: plant)
 //        }
-//    }
-//
-//    private func addPhoto() async {
-//        guard let photoItem = selectedPhotoItem else { return }
-//        guard let imageData = try? await photoItem.loadTransferable(type: Data.self) else { return }
-//        
-//        let plantImage = PlantImage(id: UUID().uuidString,
-//                                  imageData: imageData,
-//                                  timestamp: Date())
-//        plantImage.plant = plant
-//        plant.images.append(plantImage)
-//        
-//        try? modelContext.save()
-//        
 //    }
 //}
 //
+//// MARK: - Photo Gallery View
 //struct PhotoGalleryView: View {
 //    let plant: Plant
-//    @Binding var selectedPhotoItem: PhotosPickerItem?
 //    
 //    var body: some View {
 //        ScrollView(.horizontal, showsIndicators: false) {
@@ -61,23 +48,13 @@
 //                        .frame(width: 280, height: 200)
 //                        .clipShape(RoundedRectangle(cornerRadius: 12))
 //                }
-//                
-//                PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
-//                    RoundedRectangle(cornerRadius: 12)
-//                        .stroke(Color.gray.opacity(0.3), style: StrokeStyle(lineWidth: 2, dash: [5]))
-//                        .frame(width: 280, height: 200)
-//                        .overlay {
-//                            Image(systemName: "plus.circle")
-//                                .font(.largeTitle)
-//                                .foregroundColor(.gray)
-//                        }
-//                }
 //            }
 //            .padding(.horizontal)
 //        }
 //    }
 //}
 //
+//// MARK: - Health Status View
 //struct HealthStatusView: View {
 //    let plant: Plant
 //    
@@ -102,6 +79,7 @@
 //    }
 //}
 //
+//// MARK: - Care History View
 //struct CareHistoryView: View {
 //    let plant: Plant
 //    @Binding var showingCareSheet: Bool
@@ -168,6 +146,7 @@
 //    }
 //}
 //
+//// MARK: - Plant Diary View
 //struct PlantDiaryView: View {
 //    let plant: Plant
 //    @Binding var showingDiaryEntry: Bool
@@ -209,7 +188,63 @@
 //        .padding(.horizontal)
 //    }
 //}
+//import Foundation
+//import SwiftUI
+//
+//struct PlantDetailView: View {
+//    let plant: Plant
+//    @Environment(\.modelContext) private var modelContext
+//    @State private var showingCareSheet = false
+//    @State private var showingDiaryEntry = false
+//    
+//    var body: some View {
+//        ScrollView {
+//            VStack(spacing: 20) {
+//                // Main Image
+//                if let mainImageData = plant.mainImageData,
+//                   let uiImage = UIImage(data: mainImageData) {
+//                    Image(uiImage: uiImage)
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fill)
+//                        .frame(height: 200)
+//                        .clipShape(RoundedRectangle(cornerRadius: 12))
+//                        .padding(.horizontal)
+//                } else {
+//                    RoundedRectangle(cornerRadius: 12)
+//                        .fill(Color.gray.opacity(0.2))
+//                        .frame(height: 200)
+//                        .overlay {
+//                            Image(systemName: "leaf.fill")
+//                                .foregroundColor(.gray)
+//                        }
+//                        .padding(.horizontal)
+//                }
+//                
+//                // Health Status
+//                HealthStatusView(plant: plant)          // Error msg: "Cannot find 'HealthStatusView' in scope"
+//
+//                
+//                // Care History
+//                CareHistoryView(plant: plant, showingCareSheet: $showingCareSheet)          // Error msg: "Cannot find 'CareHistoryView' in scope"
+//
+//                
+//                // Plant Diary
+//                PlantDiaryView(plant: plant, showingDiaryEntry: $showingDiaryEntry)         // Error msg: "Cannot find 'PlantDiaryView' in scope"
+//
+//            }
+//            .padding(.vertical)
+//        }
+//        .navigationTitle(plant.name)
+//        .sheet(isPresented: $showingCareSheet) {
+//            AddCareEventView(plant: plant)
+//        }
+//        .sheet(isPresented: $showingDiaryEntry) {
+//            AddDiaryEntryView(plant: plant)
+//        }
+//    }
+//}
 import SwiftUI
+import SwiftData
 
 struct PlantDetailView: View {
     let plant: Plant
@@ -220,8 +255,25 @@ struct PlantDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Photo Gallery
-                PhotoGalleryView(plant: plant)
+                // Main Image
+                if let mainImageData = plant.mainImageData,
+                   let uiImage = UIImage(data: mainImageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding(.horizontal)
+                } else {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.gray.opacity(0.2))
+                        .frame(height: 200)
+                        .overlay {
+                            Image(systemName: "leaf.fill")
+                                .foregroundColor(.gray)
+                        }
+                        .padding(.horizontal)
+                }
                 
                 // Health Status
                 HealthStatusView(plant: plant)
@@ -240,26 +292,6 @@ struct PlantDetailView: View {
         }
         .sheet(isPresented: $showingDiaryEntry) {
             AddDiaryEntryView(plant: plant)
-        }
-    }
-}
-
-// MARK: - Photo Gallery View
-struct PhotoGalleryView: View {
-    let plant: Plant
-    
-    var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 12) {
-                ForEach(plant.images, id: \.id) { image in
-                    Image(uiImage: UIImage(data: image.imageData) ?? UIImage())
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 280, height: 200)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                }
-            }
-            .padding(.horizontal)
         }
     }
 }
