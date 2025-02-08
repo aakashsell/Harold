@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     @State private var selectedTab: Tab = .plants
+    @Environment(\.modelContext) private var modelContext
+    @StateObject private var badgeViewModel: BadgeViewModel
+    
+    init() {
+        _badgeViewModel = StateObject(wrappedValue: BadgeViewModel())
+    }
     
     enum Tab {
         case plants, badges, learning
@@ -22,7 +29,7 @@ struct ContentView: View {
                 }
                 .tag(Tab.plants)
             
-            BadgesView()
+            BadgesView(viewModel: badgeViewModel)
                 .tabItem {
                     Label("Badges", systemImage: "star.fill")
                 }
@@ -33,6 +40,11 @@ struct ContentView: View {
                     Label("Learn", systemImage: "book.fill")
                 }
                 .tag(Tab.learning)
+        }
+        .onAppear {
+            Task {
+                await badgeViewModel.loadBadges(modelContext: modelContext)
+            }
         }
     }
 }

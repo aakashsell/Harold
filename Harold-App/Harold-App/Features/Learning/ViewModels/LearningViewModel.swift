@@ -32,7 +32,7 @@ class LearningViewModel: ObservableObject {
         try modelContext.save()
         
         // Update associated badges
-        await BadgeViewModel(modelContext: modelContext)
-            .checkAndUpdateBadges()
+        let badgeViewModel = BadgeViewModel()
+        await badgeViewModel.checkAndUpdateBadges(modelContext: modelContext)
     }
 }

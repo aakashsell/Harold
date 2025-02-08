@@ -9,20 +9,47 @@ import SwiftUI
 import SwiftData
 
 class PlantViewModel: ObservableObject {
-    private let modelContext: ModelContext
-    
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
-    
-    func deletePlant(_ plant: Plant) {
+    func deletePlant(_ plant: Plant, modelContext: ModelContext) {
+        // Delete all associated images
+        for image in plant.images {
+            modelContext.delete(image)
+        }
+        
+        // Delete all care events
+        for event in plant.careEvents {
+            modelContext.delete(event)
+        }
+        
+        // Delete all diary entries
+        for entry in plant.diaryEntries {
+            modelContext.delete(entry)
+        }
+        
+        // Finally delete the plant
         modelContext.delete(plant)
-        try? modelContext.save()
+        
+        // Save changes
+        do {
+            try modelContext.save()
+            
+            // Update badges after successful deletion
+            Task {
+                let badgeViewModel = BadgeViewModel()
+                await badgeViewModel.checkAndUpdateBadges(modelContext: modelContext)
+            }
+        } catch {
+            print("Failed to delete plant: \(error)")
+        }
     }
     
-    func updatePlantHealth(_ plant: Plant, score: Double) {
-        plant.healthScore = score
+    func updatePlantHealth(_ plant: Plant, newScore: Double, modelContext: ModelContext) {
+        plant.healthScore = newScore
         plant.updatedAt = Date()
-        try? modelContext.save()
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to update plant health: \(error)")
+        }
     }
 }
