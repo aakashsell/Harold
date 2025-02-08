@@ -6,56 +6,33 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @State private var selectedTab: Tab = .plants
+    
+    enum Tab {
+        case plants, badges, learning
+    }
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+        TabView(selection: $selectedTab) {
+            PlantListView()
+                .tabItem {
+                    Label("Plants", systemImage: "leaf.fill")
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
+                .tag(Tab.plants)
+            
+//            BadgesView()
+//                .tabItem {
+//                    Label("Badges", systemImage: "star.fill")
+//                }
+//                .tag(Tab.badges)
+//            
+//            LearningView()
+//                .tabItem {
+//                    Label("Learn", systemImage: "book.fill")
+//                }
+//                .tag(Tab.learning)
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
-    }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
