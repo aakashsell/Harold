@@ -25,6 +25,18 @@ actor APIClient {
         ]
     }
     
+    // Ensure RemoteChange conforms to Decodable
+    struct RemoteChange: Decodable {
+        let deviceId: String
+        let changeDetails: String  // Replace with actual fields
+    }
+    
+    // Ensure LocalChange conforms to Encodable
+    struct LocalChange: Encodable {
+        let deviceId: String
+        let changeDetails: String  // Replace with actual fields
+    }
+    
     func fetchChanges(since date: Date) async throws -> [RemoteChange] {
         var components = URLComponents(url: baseURL.appendingPathComponent("changes"), resolvingAgainstBaseURL: true)!
         components.queryItems = [

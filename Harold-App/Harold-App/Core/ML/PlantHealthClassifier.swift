@@ -15,14 +15,14 @@ class PlantHealthClassifier {
     private init() {
         do {
             let config = MLModelConfiguration()
-            let plantHealth = try PlantHealthModel(configuration: config)
+            let plantHealth = try PlantHealthModel(configuration: config)  // Ensure PlantHealthModel is the correct ML model class
             model = try VNCoreMLModel(for: plantHealth.model)
         } catch {
             print("Failed to load ML model: \(error)")
         }
     }
     
-    func classifyPlantHealth(_ image: CGImage) async throws -> PlantHealth {
+    func classifyPlantHealth(_ image: CGImage) async throws -> PlantHealthStatus { // Change PlantHealth to PlantHealthStatus
         guard let model = model else {
             throw MLError.modelNotLoaded
         }
@@ -36,7 +36,7 @@ class PlantHealthClassifier {
             throw MLError.noResults
         }
         
-        return PlantHealth(
+        return PlantHealthStatus( // Change PlantHealth to PlantHealthStatus
             score: Double(topResult.confidence) * 100,
             issues: [],
             lastScanned: Date(),

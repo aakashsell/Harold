@@ -160,7 +160,7 @@ struct PlantDetailView: View {
             }
         }
         .sheet(isPresented: $showingCareSheet) {
-            AddCareEventView(plant: plant)                              
+            AddCareEventView(plant: plant)
         }
         .sheet(isPresented: $showingDiaryEntry) {
             AddDiaryEntryView(plant: plant)
