@@ -115,6 +115,8 @@ class BadgeViewModel {
             return try await calculateSeasonalProgress()
         case "Watering Wizard":
             return try await calculateWateringMethodsProgress()
+        case "Thrifty Gardener":
+            return try await calculateSavingsProgress()
         case "Rainbow Harvest":
             return try await calculateColorProgress()
         case "Fruit Expert":
@@ -193,6 +195,22 @@ class BadgeViewModel {
         })
         
         return Double(min(methods.count, 3)) / 3.0
+    }
+    
+    private func calculateSavingsProgress() async throws -> Double {
+        var descriptor = FetchDescriptor<CareEvent>()
+        descriptor.predicate = #Predicate<CareEvent> { event in
+            event.type == .harvest
+        }
+        let harvestEvents = try modelContext.fetch(descriptor)
+        
+        // Calculate estimated savings (this would need to be enhanced with actual produce prices)
+        let estimatedSavings = harvestEvents.reduce(0.0) { total, event in
+            // Basic estimation - could be improved with more detailed tracking
+            total + 5.0 // Assuming average $5 savings per harvest
+        }
+        
+        return min(estimatedSavings / 100.0, 1.0)
     }
     
     private func calculateColorProgress() async throws -> Double {
