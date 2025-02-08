@@ -8,8 +8,18 @@
 import SwiftUI
 
 struct HealthIndicator: View {
+    let score: Double
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            Circle()
+                .fill(Color.healthColor(score: score))
+                .frame(width: 12, height: 12)
+            
+            Text("\(Int(score))%")
+                .foregroundColor(Color.healthColor(score: score))
+                .font(.caption)
+        }
     }
 }
 

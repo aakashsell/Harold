@@ -36,3 +36,5 @@ final class CareEvent {
         self.plant = plant
     }
 }
+
+extension CareEvent.CareType: CaseIterable {}
