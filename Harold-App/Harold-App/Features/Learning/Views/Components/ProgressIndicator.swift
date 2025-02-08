@@ -28,5 +28,5 @@ struct ProgressIndicator: View {
 }
 
 #Preview {
-    ProgressIndicator()
+    ProgressIndicator(progress: 0.5, color: .blue)
 }

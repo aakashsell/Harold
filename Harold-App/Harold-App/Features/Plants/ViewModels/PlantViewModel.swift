@@ -5,7 +5,9 @@
 //  Created by Juan Pablo Urista on 2/7/25.
 //
 
-@Observable
+import SwiftUI
+import SwiftData
+
 class PlantViewModel: ObservableObject {
     private let modelContext: ModelContext
     

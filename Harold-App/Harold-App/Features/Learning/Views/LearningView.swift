@@ -6,19 +6,25 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LearningView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var courses: [Course]
     @StateObject private var viewModel: LearningViewModel
+    
+    // Initialize courses from the view model instead of using @Query
+    
+    init() {
+        _viewModel = StateObject(wrappedValue: LearningViewModel(modelContext: ModelContext()))
+    }
     
     var body: some View {
         NavigationStack {
             List {
-                ForEach(courses) { course in
+                ForEach(viewModel.courses) { course in
                     Section(header: Text(course.title)) {
                         ForEach(course.lessons) { lesson in
-                            NavigationLink(destination: LessonDetailView(lesson: lesson)) {
+                            NavigationLink(destination: LessonDetailView(lesson: lesson, viewModel: viewModel)) {
                                 LessonCard(lesson: lesson)
                             }
                         }
@@ -26,6 +32,11 @@ struct LearningView: View {
                 }
             }
             .navigationTitle("Learning Path")
+            .onAppear {
+                Task {
+                    await viewModel.loadCourses()
+                }
+            }
         }
     }
 }

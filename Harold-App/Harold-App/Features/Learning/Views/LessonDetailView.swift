@@ -6,14 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LessonDetailView: View {
+    @Environment(\.modelContext) private var modelContext
     let lesson: Lesson
-    @StateObject private var viewModel: LearningViewModel
+    @ObservedObject var viewModel: LearningViewModel
     
-    init(lesson: Lesson, modelContext: ModelContext) {
+    init(lesson: Lesson, viewModel: LearningViewModel) {
         self.lesson = lesson
-        self._viewModel = StateObject(wrappedValue: LearningViewModel(modelContext: modelContext))
+        self.viewModel = viewModel
     }
     
     var body: some View {
@@ -30,7 +32,6 @@ struct LessonDetailView: View {
                             .scaledToFit()
                     case .video(let url):
                         Text("Video: \(url.absoluteString)")
-                            // Implement video player if needed
                     case .quiz(let questions):
                         QuizView(questions: questions)
                     }
@@ -52,6 +53,6 @@ struct LessonDetailView: View {
     }
 }
 
-#Preview {
-    LessonDetailView()
-}
+//#Preview {
+//    LessonDetailView()
+//}

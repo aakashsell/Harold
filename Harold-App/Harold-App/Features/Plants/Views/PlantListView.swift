@@ -11,8 +11,11 @@ import SwiftData
 struct PlantListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var plants: [Plant]
-    @StateObject private var viewModel = PlantViewModel()
-    @State private var showingAddPlant = false
+    @StateObject private var viewModel: PlantViewModel
+    
+    init(modelContext: ModelContext) {
+        _viewModel = StateObject(wrappedValue: PlantViewModel(modelContext: modelContext))
+    }
     
     var body: some View {
         NavigationStack {

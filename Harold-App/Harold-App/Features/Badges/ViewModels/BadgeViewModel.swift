@@ -7,14 +7,27 @@
 
 import Foundation
 import SwiftData
-
 class BadgeViewModel: ObservableObject {
+    @Published private(set) var badges: [Badge] = []
     private let modelContext: ModelContext
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         Task {
-            await initializeBadgesIfNeeded()
+            await loadBadges()
+        }
+    }
+    
+    @MainActor
+    private func loadBadges() async {
+        let descriptor = FetchDescriptor<Badge>()
+        do {
+            self.badges = try modelContext.fetch(descriptor)
+            if badges.isEmpty {
+                await initializeBadgesIfNeeded()
+            }
+        } catch {
+            print("Failed to fetch badges: \(error)")
         }
     }
     

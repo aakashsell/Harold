@@ -55,6 +55,6 @@ struct BadgeDetailView: View {
     }
 }
 
-#Preview {
-    BadgeDetailView()
-}
+//#Preview {
+//    BadgeDetailView()
+//}
