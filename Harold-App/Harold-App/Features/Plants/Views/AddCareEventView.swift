@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct AddCareEventView: View {
+    let plant: Plant
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        // Your view content for adding care event here
+        Text("Add Care Event for \(plant.name)")
+            .padding()
     }
 }
 
-#Preview {
-    AddCareEventView()
-}
+//#Preview {
+//    AddCareEventView()
+//}
