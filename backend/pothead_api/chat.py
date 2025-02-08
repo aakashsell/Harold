@@ -3,9 +3,14 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from google import genai
 
-class Response(BaseModel):
+class ActionResponse(BaseModel):
     plant_name: str
+    prompt: str
     action_items: list[str]
+
+class SimpleResponse(BaseModel):
+    prompt: str
+    response: str
 
 class AIClient:
     def __init__(self):
@@ -13,18 +18,38 @@ class AIClient:
         self.api_key = os.getenv('GEMINI_API_KEY')
         self.client = genai.Client(api_key=self.api_key)
 
-    def generate_content(self, prompt):
+    def get_action_items(self, prompt):
         response = self.client.models.generate_content(
             model="gemini-2.0-flash",
             contents=prompt,
             config={
                 'response_mime_type': 'application/json',
-                'response_schema': list[Response],
+                'response_schema': list[ActionResponse],
             },
         )
-        parsed_response: Response = response.parsed
+        parsed_response: ActionResponse = response.parsed
         return parsed_response[0].model_dump_json()
+    
+    def talk(self, prompt):
+        response = self.client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=["the following question is about plants or gardening, please answer accordingly", prompt],
+            config={
+                'response_mime_type': 'application/json',
+                'response_schema': SimpleResponse,
+            },
+        )
+        parsed_response: SimpleResponse = response.parsed
+        return parsed_response.model_dump_json()
 
-def get_response(prompt_text):
+
+def plant_action_itmes(prompt_text):
     client = AIClient()
-    return client.generate_content(prompt_text)
+    return client.get_action_items(prompt_text)
+
+def ask_harold(prompt_text):
+    client = AIClient()
+    answer = client.talk(prompt_text)
+    print(answer)
+    return answer
+
