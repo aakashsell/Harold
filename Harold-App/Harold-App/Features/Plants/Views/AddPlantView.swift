@@ -116,6 +116,12 @@ struct AddPlantView: View {
             modelContext.insert(event)
         }
         
-        dismiss()
+        // Save changes and dismiss the view
+        do {
+            try modelContext.save()
+            dismiss()
+        } catch {
+            print("Failed to save plant: \(error)")
+        }
     }
 }
