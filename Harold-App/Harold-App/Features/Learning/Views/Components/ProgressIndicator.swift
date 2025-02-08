@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct ProgressIndicator: View {
+    let progress: Double
+    let color: Color
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.3))
+                
+                Rectangle()
+                    .fill(color)
+                    .frame(width: min(CGFloat(self.progress) * geometry.size.width, geometry.size.width))
+            }
+        }
+        .frame(height: 8)
+        .clipShape(Capsule())
     }
-}
-
-#Preview {
-    ProgressIndicator()
 }

@@ -1,3 +1,4 @@
+
 import SwiftUI
 import PhotosUI
 
@@ -44,7 +45,7 @@ struct PlantDetailView: View {
         try? modelContext.save()
         
         // Check for photo-related badges
-        await BadgeViewModel(modelContext: modelContext).checkAndUpdateBadges()
+        await BadgeViewModel().checkAndUpdateBadges(modelContext: modelContext)
     }
 }
 

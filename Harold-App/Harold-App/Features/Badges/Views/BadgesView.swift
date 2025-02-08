@@ -10,8 +10,9 @@ import SwiftData
 
 struct BadgesView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var badges: [Badge]
-    @StateObject private var viewModel: BadgeViewModel
+    @ObservedObject var viewModel: BadgeViewModel
+    
+    // Remove @Query and use the published property from viewModel instead
     
     var body: some View {
         NavigationStack {
@@ -19,7 +20,7 @@ struct BadgesView: View {
                 LazyVGrid(columns: [
                     GridItem(.adaptive(minimum: 150), spacing: 16)
                 ], spacing: 16) {
-                    ForEach(badges) { badge in
+                    ForEach(viewModel.badges) { badge in
                         NavigationLink(destination: BadgeDetailView(badge: badge)) {
                             BadgeCard(badge: badge)
                         }
