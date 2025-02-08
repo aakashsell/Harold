@@ -103,10 +103,6 @@ class LearningViewModel: ObservableObject {
             let courseDescriptor = FetchDescriptor<Course>()
             var courses = try modelContext.fetch(courseDescriptor)
             
-            // Sort courses to ensure consistent order
-            courses.sort { $0.title < $1.title } // Sort by title or another property
-            print("Fetched courses: \(courses.map { $0.title })")
-            
             if let currentIndex = courses.firstIndex(where: { $0.id == currentCourse.id }),
                currentIndex + 1 < courses.count {
                 let nextCourse = courses[currentIndex + 1]
@@ -144,7 +140,6 @@ class LearningViewModel: ObservableObject {
                         desc: "Understand the basics of plant biology",
                         content: [
                             .text("Plants are essential for life on Earth."),
-                            .image(URL(string: "https://www.e-education.psu.edu/earth103/sites/www.e-education.psu.edu.earth103/files/module05/Photsynthesis_Respiration.png")!),
                             .quiz([
                                 Lesson.QuizQuestion(
                                     question: "What is the primary function of leaves?",
@@ -159,7 +154,6 @@ class LearningViewModel: ObservableObject {
                         desc: "Learn how to properly water your plants",
                         content: [
                             .text("Watering is crucial for plant health."),
-                            .image(URL(string: "https://plantlet.org/wp-content/uploads/2020/04/Transpiration.png")!),
                             .quiz([
                                 Lesson.QuizQuestion(
                                     question: "How often should you water most plants?",
@@ -169,8 +163,7 @@ class LearningViewModel: ObservableObject {
                             ])
                         ]
                     )
-                ],
-                courseOrder: 1
+                ]
             ),
             // Course 2: Advanced Plant Care
             Course(
@@ -182,7 +175,6 @@ class LearningViewModel: ObservableObject {
                         desc: "Learn how to prune plants for optimal growth",
                         content: [
                             .text("Pruning helps plants grow healthier and stronger."),
-                            .image(URL(string: "https://anokaswcd.org/images/easyblog_articles/292/b2ap3_large_pruning-2.jpg")!),
                             .quiz([
                                 Lesson.QuizQuestion(
                                     question: "What is the main purpose of pruning?",
@@ -192,8 +184,7 @@ class LearningViewModel: ObservableObject {
                             ])
                         ]
                     )
-                ],
-                courseOrder: 2
+                ]
             ),
             // Course 3: Plant Nutrition
             Course(
@@ -205,7 +196,6 @@ class LearningViewModel: ObservableObject {
                         desc: "Learn about the key nutrients plants need",
                         content: [
                             .text("Plants require a balance of macronutrients and micronutrients."),
-                            .image(URL(string: "https://media.istockphoto.com/id/921983682/vector/diagram-of-nutrients-in-organic-fertilizers.jpg?s=612x612&w=0&k=20&c=grL-2JBU4XiVBSDu5v4WqKwduJIQrif1bCnWZGHcp9s=")!),
                             .quiz([
                                 Lesson.QuizQuestion(
                                     question: "Which nutrient is essential for leaf growth?",
@@ -215,8 +205,7 @@ class LearningViewModel: ObservableObject {
                             ])
                         ]
                     )
-                ],
-                courseOrder: 3
+                ]
             ),
             // Course 4: Troubleshooting Plant Problems
             Course(
@@ -228,7 +217,6 @@ class LearningViewModel: ObservableObject {
                         desc: "Learn how to identify and treat plant pests",
                         content: [
                             .text("Pests can damage plants and reduce their health."),
-                            .image(URL(string: "https://o.quizlet.com/UT4BhbvaJHcji1AnzoW9kg.jpg")!),
                             .quiz([
                                 Lesson.QuizQuestion(
                                     question: "What is a common treatment for aphids?",
@@ -238,9 +226,9 @@ class LearningViewModel: ObservableObject {
                             ])
                         ]
                     )
-                ],
-                courseOrder: 4
+                ]
             )
         ]
     }
+
 }

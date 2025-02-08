@@ -20,7 +20,45 @@ final class Lesson {
     
     enum LessonContent: Codable {
         case text(String)
-        case quiz([QuizQuestion]) // Removed .image case
+        case quiz([QuizQuestion])
+        
+        // Add CodingKeys to handle encoding/decoding
+        enum CodingKeys: String, CodingKey {
+            case text
+            case quiz
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            // Try to decode text first
+            if let textValue = try? container.decode(String.self, forKey: .text) {
+                self = .text(textValue)
+                return
+            }
+            
+            // Then try to decode quiz
+            if let quizValue = try? container.decode([QuizQuestion].self, forKey: .quiz) {
+                self = .quiz(quizValue)
+                return
+            }
+            
+            // If neither decoding works, throw an error
+            throw DecodingError.typeMismatch(LessonContent.self,
+                DecodingError.Context(codingPath: decoder.codingPath,
+                                      debugDescription: "Invalid LessonContent"))
+        }
+        
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            
+            switch self {
+            case .text(let textValue):
+                try container.encode(textValue, forKey: .text)
+            case .quiz(let quizValue):
+                try container.encode(quizValue, forKey: .quiz)
+            }
+        }
     }
     
     struct QuizQuestion: Codable, Identifiable {

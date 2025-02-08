@@ -11,7 +11,7 @@ import SwiftData
 
 struct LearningView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Course.courseOrder, order: .forward) private var courses: [Course] // Sort by courseOrder
+    @Query private var courses: [Course]
     @StateObject private var viewModel: LearningViewModel
     
     init(modelContext: ModelContext) {
