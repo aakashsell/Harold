@@ -47,11 +47,14 @@ struct ChatView: View {
         let userMessage = ChatMessage(content: messageText, isUser: true)
         messages.append(userMessage)
         
+        let prompt = messageText
+        messageText = ""
+        
         // Placeholder for API call
         Task {
             do {
                 // Simulate API call (replace with actual API logic)
-                let response = try await performAIQuery(message: messageText)
+                let response = try await performAIQuery(message: prompt)
                 
                 // Add AI response to messages
                 let aiMessage = ChatMessage(content: response, isUser: false)
@@ -67,7 +70,6 @@ struct ChatView: View {
             }
             
             // Clear input
-            messageText = ""
         }
     }
     
