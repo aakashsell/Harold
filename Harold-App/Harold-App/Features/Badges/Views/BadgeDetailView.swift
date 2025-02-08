@@ -54,7 +54,3 @@ struct BadgeDetailView: View {
         .navigationTitle("Badge Details")
     }
 }
-
-//#Preview {
-//    BadgeDetailView()
-//}

@@ -10,14 +10,8 @@ import SwiftData
 
 class LearningViewModel: ObservableObject {
     @Published private(set) var courses: [Course] = []
-    private let modelContext: ModelContext
     
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
-    
-    @MainActor
-    func loadCourses() async {
+    func loadCourses(modelContext: ModelContext) async {
         let descriptor = FetchDescriptor<Course>()
         do {
             self.courses = try modelContext.fetch(descriptor)
@@ -26,7 +20,7 @@ class LearningViewModel: ObservableObject {
         }
     }
     
-    func completeLesson(_ lesson: Lesson) async throws {
+    func completeLesson(_ lesson: Lesson, modelContext: ModelContext) async throws {
         lesson.isCompleted = true
         lesson.completedAt = Date()
         try modelContext.save()

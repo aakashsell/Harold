@@ -12,10 +12,9 @@ struct LearningView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel: LearningViewModel
     
-    // Initialize courses from the view model instead of using @Query
-    
     init() {
-        _viewModel = StateObject(wrappedValue: LearningViewModel(modelContext: ModelContext()))
+        // Initialize with empty state, modelContext will be used in onAppear
+        _viewModel = StateObject(wrappedValue: LearningViewModel())
     }
     
     var body: some View {
@@ -34,7 +33,7 @@ struct LearningView: View {
             .navigationTitle("Learning Path")
             .onAppear {
                 Task {
-                    await viewModel.loadCourses()
+                    await viewModel.loadCourses(modelContext: modelContext)
                 }
             }
         }

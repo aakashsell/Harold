@@ -13,11 +13,6 @@ struct LessonDetailView: View {
     let lesson: Lesson
     @ObservedObject var viewModel: LearningViewModel
     
-    init(lesson: Lesson, viewModel: LearningViewModel) {
-        self.lesson = lesson
-        self.viewModel = viewModel
-    }
-    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -26,12 +21,14 @@ struct LessonDetailView: View {
                     case .text(let text):
                         Text(text)
                             .font(.body)
+                            .padding(.horizontal)
                     case .image(let imageName):
                         Image(imageName)
                             .resizable()
                             .scaledToFit()
                     case .video(let url):
                         Text("Video: \(url.absoluteString)")
+                            .padding(.horizontal)
                     case .quiz(let questions):
                         QuizView(questions: questions)
                     }
@@ -40,11 +37,12 @@ struct LessonDetailView: View {
                 if !lesson.isCompleted {
                     Button("Complete Lesson") {
                         Task {
-                            try? await viewModel.completeLesson(lesson)
+                            try? await viewModel.completeLesson(lesson, modelContext: modelContext)
                         }
                     }
                     .buttonStyle(.borderedProminent)
                     .padding()
+                    .frame(maxWidth: .infinity)
                 }
             }
             .padding()
@@ -52,7 +50,3 @@ struct LessonDetailView: View {
         .navigationTitle(lesson.title)
     }
 }
-
-//#Preview {
-//    LessonDetailView()
-//}

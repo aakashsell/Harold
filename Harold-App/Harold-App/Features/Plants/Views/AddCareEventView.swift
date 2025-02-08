@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddCareEventView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    let plant: Plant
+    @Environment(\.dismiss) private var dismiss
     
+    let plant: Plant
     @State private var selectedType: CareEvent.CareType = .water
     @State private var notes: String = ""
     
@@ -27,9 +28,9 @@ struct AddCareEventView: View {
                     }
                 }
                 
-                Section("Notes") {
+                Section("Notes (Optional)") {
                     TextEditor(text: $notes)
-                        .frame(height: 100)
+                        .frame(minHeight: 100)
                 }
                 
                 Section {
@@ -56,18 +57,37 @@ struct AddCareEventView: View {
             notes: notes.isEmpty ? nil : notes,
             plant: plant
         )
+        
         modelContext.insert(event)
         
-        // Update badges if needed
+        // Update badges
         Task {
-            await BadgeViewModel(modelContext: modelContext)
-                .checkAndUpdateBadges()
+            let badgeViewModel = BadgeViewModel()
+            await badgeViewModel.checkAndUpdateBadges(modelContext: modelContext)
         }
         
         dismiss()
     }
 }
 
-//#Preview {
-//    AddCareEventView()
-//}
+// Preview Provider
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Plant.self, CareEvent.self, configurations: config)
+    
+    let plant = Plant(
+        id: "preview",
+        deviceId: "preview",
+        name: "Test Plant",
+        species: "Test Species",
+        images: [],
+        healthScore: 100,
+        createdAt: Date(),
+        updatedAt: Date(),
+        careEvents: [],
+        diaryEntries: []
+    )
+    
+    return AddCareEventView(plant: plant)
+        .modelContainer(container)
+}
