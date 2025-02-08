@@ -44,8 +44,6 @@ struct PlantDetailView: View {
         
         try? modelContext.save()
         
-        // Check for photo-related badges
-        await BadgeViewModel().checkAndUpdateBadges(modelContext: modelContext)
     }
 }
 

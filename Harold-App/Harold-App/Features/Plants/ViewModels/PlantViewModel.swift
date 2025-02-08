@@ -31,12 +31,7 @@ class PlantViewModel: ObservableObject {
         // Save changes
         do {
             try modelContext.save()
-            
-            // Update badges after successful deletion
-            Task {
-                let badgeViewModel = BadgeViewModel()
-                await badgeViewModel.checkAndUpdateBadges(modelContext: modelContext)
-            }
+
         } catch {
             print("Failed to delete plant: \(error)")
         }

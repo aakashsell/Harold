@@ -60,12 +60,6 @@ struct AddCareEventView: View {
         
         modelContext.insert(event)
         
-        // Update badges
-        Task {
-            let badgeViewModel = BadgeViewModel()
-            await badgeViewModel.checkAndUpdateBadges(modelContext: modelContext)
-        }
-        
         dismiss()
     }
 }

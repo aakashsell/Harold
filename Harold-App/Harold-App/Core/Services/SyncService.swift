@@ -4,9 +4,8 @@ import Foundation
 actor SyncService {
     static let shared = SyncService()
     private let api = APIClient.shared
-    private let deviceId = DeviceManager.shared.deviceId
+    private let deviceManager = DeviceManager.shared
     
-    // Type alias for compatibility
     typealias RemoteChange = APIClient.RemoteChange
     typealias LocalChange = APIClient.LocalChange
     
@@ -17,13 +16,13 @@ actor SyncService {
     }
     
     func syncPlants(context: ModelContext) async throws {
-        // Fetch remote changes
-        let lastSync = DeviceManager.shared.lastSyncTimestamp
+        // Fetch remote changes using deviceManager
+        let lastSync = deviceManager.lastSyncTimestamp
         let remoteChanges = try await api.fetchChanges(since: lastSync)
         
         // Apply remote changes
         for change in remoteChanges {
-            if change.deviceId != deviceId {
+            if change.deviceId != deviceManager.deviceId {
                 try await applyRemoteChange(change, in: context)
             }
         }
@@ -32,7 +31,8 @@ actor SyncService {
         let localChanges = try await getLocalChanges(context)
         try await api.pushChanges(localChanges)
         
-        DeviceManager.shared.lastSyncTimestamp = Date()
+        // Update sync timestamp
+        deviceManager.lastSyncTimestamp = Date()
     }
     
     private func applyRemoteChange(_ change: RemoteChange, in context: ModelContext) async throws {

@@ -116,11 +116,6 @@ struct AddPlantView: View {
             modelContext.insert(event)
         }
         
-        // Check badges (recycled materials, photo upload, etc.)
-        Task {
-            await BadgeViewModel().checkAndUpdateBadges(modelContext: modelContext)
-        }
-        
         dismiss()
     }
 }

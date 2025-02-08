@@ -24,9 +24,5 @@ class LearningViewModel: ObservableObject {
         lesson.isCompleted = true
         lesson.completedAt = Date()
         try modelContext.save()
-        
-        // Update associated badges
-        let badgeViewModel = BadgeViewModel()
-        await badgeViewModel.checkAndUpdateBadges(modelContext: modelContext)
     }
 }

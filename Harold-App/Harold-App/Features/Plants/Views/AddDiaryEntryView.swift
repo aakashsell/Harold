@@ -112,12 +112,6 @@ struct AddDiaryEntryView: View {
         plant.healthScore = healthScore
         plant.updatedAt = Date()
         
-        // Check if this entry qualifies for plant healer badge
-        Task {
-            let badgeViewModel = BadgeViewModel()
-            await badgeViewModel.checkAndUpdateBadges(modelContext: modelContext)
-        }
-        
         dismiss()
     }
 }

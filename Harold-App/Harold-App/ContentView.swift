@@ -9,16 +9,11 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var selectedTab: Tab = .plants
     @Environment(\.modelContext) private var modelContext
-    @StateObject private var badgeViewModel: BadgeViewModel
-    
-    init() {
-        _badgeViewModel = StateObject(wrappedValue: BadgeViewModel())
-    }
+    @State private var selectedTab: Tab = .plants
     
     enum Tab {
-        case plants, badges, learning
+        case plants, learning
     }
     
     var body: some View {
@@ -28,23 +23,11 @@ struct ContentView: View {
                     Label("Plants", systemImage: "leaf.fill")
                 }
                 .tag(Tab.plants)
-            
-            BadgesView(viewModel: badgeViewModel)
-                .tabItem {
-                    Label("Badges", systemImage: "star.fill")
-                }
-                .tag(Tab.badges)
-            
             LearningView()
                 .tabItem {
                     Label("Learn", systemImage: "book.fill")
                 }
                 .tag(Tab.learning)
-        }
-        .onAppear {
-            Task {
-                await badgeViewModel.loadBadges(modelContext: modelContext)
-            }
         }
     }
 }
