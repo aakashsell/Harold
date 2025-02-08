@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DeviceManager {
+class DeviceManager: ObservableObject {
     static let shared = DeviceManager()
     private init() {}
     

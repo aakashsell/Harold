@@ -8,8 +8,7 @@
 import Foundation
 import SwiftData
 
-@Observable
-class BadgeViewModel {
+class BadgeViewModel: ObservableObject {
     private let modelContext: ModelContext
     
     init(modelContext: ModelContext) {
