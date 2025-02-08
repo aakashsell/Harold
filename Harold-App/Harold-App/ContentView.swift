@@ -22,17 +22,17 @@ struct ContentView: View {
                 }
                 .tag(Tab.plants)
             
-//            BadgesView()
-//                .tabItem {
-//                    Label("Badges", systemImage: "star.fill")
-//                }
-//                .tag(Tab.badges)
-//            
-//            LearningView()
-//                .tabItem {
-//                    Label("Learn", systemImage: "book.fill")
-//                }
-//                .tag(Tab.learning)
+            BadgesView()
+                .tabItem {
+                    Label("Badges", systemImage: "star.fill")
+                }
+                .tag(Tab.badges)
+            
+            LearningView()
+                .tabItem {
+                    Label("Learn", systemImage: "book.fill")
+                }
+                .tag(Tab.learning)
         }
     }
 }

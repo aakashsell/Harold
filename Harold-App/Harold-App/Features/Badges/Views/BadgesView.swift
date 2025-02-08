@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct BadgesView: View {
     @Environment(\.modelContext) private var modelContext

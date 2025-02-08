@@ -5,8 +5,10 @@
 //  Created by Juan Pablo Urista on 2/7/25.
 //
 
-@Observable
-class BadgeViewModel {
+import Foundation
+import SwiftData
+
+class BadgeViewModel: ObservableObject {
     private let modelContext: ModelContext
     
     init(modelContext: ModelContext) {
