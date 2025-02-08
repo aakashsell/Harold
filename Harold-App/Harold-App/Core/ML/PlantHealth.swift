@@ -13,7 +13,3 @@ struct PlantHealth {
     let lastScanned: Date
     let predictions: [String]  // Possible predictions, for example ["Healthy", "Unhealthy"]
 }
-
-//#Preview {
-//    PlantHealth()
-//}

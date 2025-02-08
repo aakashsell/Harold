@@ -12,7 +12,3 @@ struct Plant3DView: View {
         Text("Hello, World!")
     }
 }
-
-#Preview {
-    Plant3DView()
-}

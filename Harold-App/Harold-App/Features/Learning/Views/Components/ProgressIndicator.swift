@@ -26,7 +26,3 @@ struct ProgressIndicator: View {
         .clipShape(Capsule())
     }
 }
-
-#Preview {
-    ProgressIndicator(progress: 0.5, color: .blue)
-}

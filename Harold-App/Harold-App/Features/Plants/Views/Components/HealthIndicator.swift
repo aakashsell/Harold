@@ -22,7 +22,3 @@ struct HealthIndicator: View {
         }
     }
 }
-
-//#Preview {
-//    HealthIndicator()
-//}
