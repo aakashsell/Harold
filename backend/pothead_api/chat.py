@@ -1,34 +1,30 @@
-from google import genai
-from google.genai import types
 import os
 from dotenv import load_dotenv
-from pydantic import BaseModel, TypeAdapter
-
+from pydantic import BaseModel
+from google import genai
 
 class Response(BaseModel):
-  plant_name: str
-  action_items: list[str]
+    plant_name: str
+    action_items: list[str]
 
+class AIClient:
+    def __init__(self):
+        load_dotenv()
+        self.api_key = os.getenv('GEMINI_API_KEY')
+        self.client = genai.Client(api_key=self.api_key)
 
-def get_response(prompt):
-    load_dotenv()
+    def generate_content(self, prompt):
+        response = self.client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+            config={
+                'response_mime_type': 'application/json',
+                'response_schema': list[Response],
+            },
+        )
+        parsed_response: Response = response.parsed
+        return parsed_response[0].model_dump_json()
 
-    api_key = os.getenv('GEMINI_API_KEY')
-
-    client = genai.Client(api_key=api_key)
-
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt,
-        config={
-            'response_mime_type': 'application/json',
-            'response_schema': list[Response],
-            'generate_content_config': types.GenerateContentConfig(
-               tools=[types.Tool(google_search=types.GoogleSearchRetrieval)]
-               )
-        },    
-
-    )
-
-    print(response)
-    return response
+def get_response(prompt_text):
+    client = AIClient()
+    return client.generate_content(prompt_text)
