@@ -1,10 +1,3 @@
-//
-//  SyncService.swift
-//  Harold-App
-//
-//  Created by Juan Pablo Urista on 2/7/25.
-//
-
 import SwiftData
 import Foundation
 
@@ -12,6 +5,10 @@ actor SyncService {
     static let shared = SyncService()
     private let api = APIClient.shared
     private let deviceId = DeviceManager.shared.deviceId
+    
+    // Type alias for compatibility
+    typealias RemoteChange = APIClient.RemoteChange
+    typealias LocalChange = APIClient.LocalChange
     
     enum SyncError: Error {
         case networkError
@@ -39,11 +36,14 @@ actor SyncService {
     }
     
     private func applyRemoteChange(_ change: RemoteChange, in context: ModelContext) async throws {
-        // Implement merge logic
+        // Implement merge logic based on the change structure
+        // For example, you could update the context with the new data
+        // context.update(change)
     }
     
     private func getLocalChanges(_ context: ModelContext) async throws -> [LocalChange] {
         // Get changes since last sync
-        return []
+        let localChanges: [LocalChange] = [] // Example, replace with your logic to get local changes
+        return localChanges
     }
 }

@@ -13,6 +13,6 @@ struct HealthIndicator: View {
     }
 }
 
-#Preview {
-    HealthIndicator()
-}
+//#Preview {
+//    HealthIndicator()
+//}
