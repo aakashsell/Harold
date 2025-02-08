@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var selectedTab: Tab = .plants
     
     enum Tab {
-        case plants, learning
+        case plants, learning, chat
     }
     
     var body: some View {
@@ -23,6 +23,11 @@ struct ContentView: View {
                     Label("Plants", systemImage: "leaf.fill")
                 }
                 .tag(Tab.plants)
+            ChatView()
+                .tabItem {
+                    Label("Chat", systemImage: "sparkles")
+                }
+                .tag(Tab.chat)
             LearningView()
                 .tabItem {
                     Label("Learn", systemImage: "book.fill")
