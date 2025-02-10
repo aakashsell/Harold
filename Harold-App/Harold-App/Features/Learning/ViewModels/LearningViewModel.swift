@@ -83,7 +83,7 @@ class LearningViewModel: ObservableObject {
             unlockNextCourse(after: course)
         }
         
-        // Unlock the next lesson if it exists
+        // Unlock the next lesson
         if let currentIndex = course.lessons.firstIndex(where: { $0.id == lesson.id }),
            currentIndex + 1 < course.lessons.count {
             let nextLesson = course.lessons[currentIndex + 1]
@@ -163,7 +163,8 @@ class LearningViewModel: ObservableObject {
                             ])
                         ]
                     )
-                ]
+                ],
+                courseOrder: 1
             ),
             // Course 2: Advanced Plant Care
             Course(
@@ -184,7 +185,8 @@ class LearningViewModel: ObservableObject {
                             ])
                         ]
                     )
-                ]
+                ],
+                courseOrder: 2
             ),
             // Course 3: Plant Nutrition
             Course(
@@ -205,7 +207,8 @@ class LearningViewModel: ObservableObject {
                             ])
                         ]
                     )
-                ]
+                ],
+                courseOrder: 3
             ),
             // Course 4: Troubleshooting Plant Problems
             Course(
@@ -226,7 +229,8 @@ class LearningViewModel: ObservableObject {
                             ])
                         ]
                     )
-                ]
+                ],
+                courseOrder: 4
             )
         ]
     }

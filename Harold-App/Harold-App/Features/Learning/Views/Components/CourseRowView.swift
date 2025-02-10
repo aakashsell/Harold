@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct CourseRowView: View {
     let course: Course
     
@@ -48,7 +46,7 @@ struct CourseRowView: View {
             }
         }
         .padding()
-        .background(course.isUnlocked ? Color.white : Color.gray.opacity(0.1))
+        .background(Color.clear)
         .cornerRadius(10)
     }
 }

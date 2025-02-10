@@ -16,6 +16,7 @@ final class Course {
     var progress: Double
     var isUnlocked: Bool
     var isCompleted: Bool
+    var courseOrder: Int
     
     init(id: String = UUID().uuidString,
          title: String,
@@ -23,7 +24,8 @@ final class Course {
          lessons: [Lesson] = [],
          progress: Double = 0.0,
          isUnlocked: Bool = false,
-         isCompleted: Bool = false) {
+         isCompleted: Bool = false,
+         courseOrder: Int = 0) {
         self.id = id
         self.title = title
         self.desc = desc
@@ -31,5 +33,6 @@ final class Course {
         self.progress = progress
         self.isUnlocked = isUnlocked
         self.isCompleted = isCompleted
+        self.courseOrder = courseOrder
     }
 }

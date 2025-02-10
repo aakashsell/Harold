@@ -18,18 +18,21 @@ struct ContentView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Background content
             TabView(selection: $selectedTab) {
                 PlantListView()
                     .tabItem {
                         Label("Plants", systemImage: "leaf.fill")
                     }
                     .tag(Tab.plants)
-                ChatView()
-                    .tabItem {
-                        Label("Chat", systemImage: "sparkles")
-                    }
-                    .tag(Tab.chat)
+                
+                NavigationStack {
+                    ChatView()
+                }
+                .tabItem {
+                    Label("Chat", systemImage: "sparkles")
+                }
+                .tag(Tab.chat)
+                
                 LearningView(modelContext: modelContext)
                     .tabItem {
                         Label("Learn", systemImage: "book.fill")
@@ -40,7 +43,6 @@ struct ContentView: View {
         }
     }
     
-    // Function to determine the active tab color
     private func activeTabColor() -> Color {
         switch selectedTab {
         case .plants:
