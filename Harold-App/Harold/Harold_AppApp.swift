@@ -12,7 +12,7 @@ import SwiftData
 struct HaroldApp: App {
     @StateObject private var deviceManager = DeviceManager.shared
     let modelContainer: ModelContainer
-    
+
     init() {
         do {
             let schema = Schema([
