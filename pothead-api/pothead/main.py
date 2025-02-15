@@ -1,24 +1,14 @@
-from typing import Union
-
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from pothead.models import * 
+from dotenv import load_dotenv
+from pothead.chat.chat_router import chat_router
 
-
-from chat import *
-from pydantic import BaseModel
 
 app = FastAPI()
-
+load_dotenv()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"message": "Hello World!"}
 
-
-class Prompt(BaseModel):
-    prompt: str
-
-@app.post("/api/chat")
-async def chat(payload: Prompt):
-    response = ask_harold(payload.prompt)
-    return JSONResponse(response)
+app.include_router(chat_router, prefix="/api")
