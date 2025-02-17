@@ -25,7 +25,6 @@ struct HealthStatusView: View {
                 .tint(Color.healthColor(score: plant.healthScore))
         }
         .padding()
-        .background(Color.haroldBackground)
         .cornerRadius(12)
         .padding(.horizontal)
     }

@@ -102,7 +102,7 @@ struct AddDiaryEntryView: View {
                     }
                 }
             }
-            .onChange(of: selectedPhotoItem) {
+            .onChange(of: selectedPhotoItem) { 
                 Task {
                     if let photoItem = selectedPhotoItem,
                        let data = try? await photoItem.loadTransferable(type: Data.self) {

@@ -8,10 +8,7 @@
 import SwiftUI
 import Foundation
 
-extension Color {
-    static let haroldGreen = Color("HaroldGreen")
-    static let haroldBackground = Color("HaroldBackground")
-    
+extension Color {    
     static func healthColor(score: Double) -> Color {
         switch score {
         case 90...100: return .green

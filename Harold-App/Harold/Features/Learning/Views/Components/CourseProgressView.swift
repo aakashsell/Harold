@@ -23,7 +23,6 @@ struct CourseProgressView: View {
             ProgressIndicator(progress: course.progress)
         }
         .padding()
-        .background(Color.haroldBackground)
         .cornerRadius(12)
     }
 }

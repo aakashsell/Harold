@@ -47,7 +47,6 @@ struct CareHistoryView: View {
             }
         }
         .padding()
-        .background(Color.haroldBackground)
         .cornerRadius(12)
         .padding(.horizontal)
     }

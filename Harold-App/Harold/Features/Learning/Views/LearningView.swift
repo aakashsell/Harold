@@ -17,7 +17,7 @@ struct LearningView: View {
     init(modelContext: ModelContext) {
         _viewModel = StateObject(wrappedValue: LearningViewModel(modelContext: modelContext))
     }
-    
+
     var body: some View {
         NavigationStack {
             List {

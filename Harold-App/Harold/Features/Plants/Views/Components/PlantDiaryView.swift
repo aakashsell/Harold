@@ -50,7 +50,6 @@ struct PlantDiaryView: View {
             }
         }
         .padding()
-        .background(Color.haroldBackground)
         .cornerRadius(12)
         .padding(.horizontal)
         .sheet(item: $selectedEntry) { entry in

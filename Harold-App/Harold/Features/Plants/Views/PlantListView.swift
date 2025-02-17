@@ -10,7 +10,7 @@ import SwiftData
 
 struct PlantListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var plants: [Plant]
+    @Query(sort: \Plant.createdAt, order: .reverse) private var plants: [Plant]
     @StateObject private var viewModel: PlantViewModel
     @State private var showingAddPlant = false
     @State private var searchText = ""

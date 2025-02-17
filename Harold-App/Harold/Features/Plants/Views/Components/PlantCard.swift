@@ -57,7 +57,6 @@ struct PlantCard: View {
             }
         }
         .padding()
-        .background(Color.haroldBackground)
         .cornerRadius(12)
         .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 2)
     }
